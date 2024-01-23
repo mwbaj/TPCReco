@@ -17,11 +17,13 @@
 
 class grawToEventTPCTest : public ::testing::Test {
 public:
+  static boost::property_tree::ptree myConfig;
   static std::shared_ptr<PEventTPC> myEventPtr;
   static PEventTPC* rootEventPtr;
 
   static std::string rootFileName;
   static TFile* rootfile;
+  static TTree* tree;
 
   static void SetUpTestSuite() {
   
@@ -32,7 +34,7 @@ public:
                   (char*)"--meta.configJson",const_cast<char *>(testJSON.data())};
                 
     ConfigManager cm;
-    boost::property_tree::ptree myConfig = cm.getConfig(argc, argv);
+    myConfig = cm.getConfig(argc, argv);
     int status = chdir("../../resources");
     std::shared_ptr<EventSourceBase> myEventSource = EventSourceFactory::makeEventSourceObject(myConfig);
   
@@ -46,7 +48,7 @@ public:
     std::string grawFileName = myConfig.get<std::string>("input.dataFile","");
     rootFileName = createROOTFileName(grawFileName);
     rootfile = new TFile(rootFileName.c_str());
-    TTree* tree = (TTree*)rootfile->Get(myConfig.get<std::string>("input.treeName","").c_str());
+    tree = (TTree*)rootfile->Get(myConfig.get<std::string>("input.treeName","").c_str());
     tree->SetBranchAddress("Event", &rootEventPtr);
     tree->GetEntry(0);
   }
@@ -58,10 +60,12 @@ public:
 
 };
 
+boost::property_tree::ptree grawToEventTPCTest::myConfig;
 std::shared_ptr<PEventTPC> grawToEventTPCTest::myEventPtr;
 PEventTPC* grawToEventTPCTest::rootEventPtr;
 std::string grawToEventTPCTest::rootFileName;
 TFile* grawToEventTPCTest::rootfile;
+TTree* grawToEventTPCTest::tree;
 
 
 TEST(ROOTFileNameTest, createROOTFileName)
@@ -75,10 +79,12 @@ TEST(ROOTFileNameTest, createROOTFileName)
 }
 
 
-TEST_F(grawToEventTPCTest, compareGrawToRoot)
+TEST_F(grawToEventTPCTest, convertGRAWFile)
 {
   ASSERT_EQ(rootfile->IsZombie(), false);
   ASSERT_EQ(rootfile->IsOpen(), true);
+  if(myConfig.get<int>("input.readNEvents") > 0)
+    EXPECT_EQ(tree->GetEntries(), myConfig.get<int>("input.readNEvents",1));
 
   auto grawChargeMap = myEventPtr->GetChargeMap();
   auto rootChargeMap = rootEventPtr->GetChargeMap();
