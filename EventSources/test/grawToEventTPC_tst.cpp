@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include "gtest/gtest.h"
 #include "TFile.h"
+#include "TTree.h"
 
 #include "TPCReco/EventSourceFactory.h"
 #include "TPCReco/ConfigManager.h"
@@ -17,10 +18,10 @@
 class grawToEventTPCTest : public ::testing::Test {
 public:
   static std::shared_ptr<PEventTPC> myEventPtr;
+  static PEventTPC* rootEventPtr;
 
+  static std::string rootFileName;
   static TFile* rootfile;
-
-  static boost::property_tree::ptree myConfig;
 
   static void SetUpTestSuite() {
   
@@ -31,7 +32,7 @@ public:
                   (char*)"--meta.configJson",const_cast<char *>(testJSON.data())};
                 
     ConfigManager cm;
-    myConfig = cm.getConfig(argc, argv);
+    boost::property_tree::ptree myConfig = cm.getConfig(argc, argv);
     int status = chdir("../../resources");
     std::shared_ptr<EventSourceBase> myEventSource = EventSourceFactory::makeEventSourceObject(myConfig);
   
@@ -41,7 +42,13 @@ public:
     // convert the graw file to root file
     convertGRAWFile(myConfig);
 
-    rootfile = new TFile("EventTPC_2022-04-12T08_03_44.531_0000.root", "READ");
+    // load the root file
+    std::string grawFileName = myConfig.get<std::string>("input.dataFile","");
+    rootFileName = createROOTFileName(grawFileName);
+    rootfile = new TFile(rootFileName.c_str());
+    TTree* tree = (TTree*)rootfile->Get(myConfig.get<std::string>("input.treeName","").c_str());
+    tree->SetBranchAddress("Event", &rootEventPtr);
+    tree->GetEntry(0);
   }
 
   static void TearDownTestSuite() {
@@ -51,9 +58,10 @@ public:
 
 };
 
-std::shared_ptr<PEventTPC> grawToEventTPCTest::myEventPtr(0);
-TFile* grawToEventTPCTest::rootfile(0);
-boost::property_tree::ptree grawToEventTPCTest::myConfig;
+std::shared_ptr<PEventTPC> grawToEventTPCTest::myEventPtr;
+PEventTPC* grawToEventTPCTest::rootEventPtr;
+std::string grawToEventTPCTest::rootFileName;
+TFile* grawToEventTPCTest::rootfile;
 
 
 TEST(ROOTFileNameTest, createROOTFileName)
@@ -66,23 +74,18 @@ TEST(ROOTFileNameTest, createROOTFileName)
   EXPECT_EQ(rootFileName, "EventTPC_2022-04-12T08_03_44.531_0000.root");
 }
 
-TEST_F(grawToEventTPCTest, fileExists) 
-{
-    ASSERT_EQ(rootfile->IsZombie(), false);
-    EXPECT_EQ(rootfile->IsOpen(), true);
-    rootfile->Close();
-    EXPECT_EQ(rootfile->IsOpen(), false);
-}
 
 TEST_F(grawToEventTPCTest, compareGrawToRoot)
 {
+  ASSERT_EQ(rootfile->IsZombie(), false);
+  ASSERT_EQ(rootfile->IsOpen(), true);
+
   auto grawChargeMap = myEventPtr->GetChargeMap();
-  TTree* tree = (TTree*)rootfile->Get(myConfig.get<std::string>("input.treeName").c_str());
-  
-  std::shared_ptr<EventSourceBase> rootEventSource = EventSourceFactory::makeEventSourceObject(myConfig);
-  std::shared_ptr<PEventTPC> rootEventPtr = rootEventSource->getCurrentPEvent();
-  rootEventSource->loadFileEntry(0);
   auto rootChargeMap = rootEventPtr->GetChargeMap();
+
   EXPECT_EQ(grawChargeMap, rootChargeMap);
+
+  rootfile->Close();
+  EXPECT_EQ(rootfile->IsOpen(), false);
 }
 
