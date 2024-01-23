@@ -1,5 +1,17 @@
 #include "TPCReco/grawToEventTPC.h"
 
+#include <iostream>
+#include <cstdlib>
+#include <memory>
+
+#include <TFile.h>
+#include <TTree.h>
+
+#include "TPCReco/EventTPC.h"
+#include "TPCReco/PEventTPC.h"
+#include "TPCReco/EventSourceGRAW.h"
+#include "TPCReco/EventSourceMultiGRAW.h"
+#include "TPCReco/EventSourceFactory.h"
 
 /////////////////////////////////////
 /////////////////////////////////////
