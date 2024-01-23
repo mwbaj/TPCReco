@@ -56,6 +56,16 @@ TFile* grawToEventTPCTest::rootfile(0);
 boost::property_tree::ptree grawToEventTPCTest::myConfig;
 
 
+TEST(ROOTFileNameTest, createROOTFileName)
+{
+  std::string grawFileName = "../testData/CoBo0_AsAd0_2022-04-12T08_03_44.531_0000.graw,"
+                             "../testData/CoBo0_AsAd1_2022-04-12T08_03_44.533_0000.graw,"
+                             "../testData/CoBo0_AsAd2_2022-04-12T08_03_44.536_0000.graw,"
+                             "../testData/CoBo0_AsAd3_2022-04-12T08_03_44.540_0000.graw";
+  std::string rootFileName = createROOTFileName(grawFileName);
+  EXPECT_EQ(rootFileName, "EventTPC_2022-04-12T08_03_44.531_0000.root");
+}
+
 TEST_F(grawToEventTPCTest, fileExists) 
 {
     ASSERT_EQ(rootfile->IsZombie(), false);
