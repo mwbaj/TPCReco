@@ -27,12 +27,13 @@ ROOT::Math::XYZPoint EventGenerator::GenerateVertexPosition() {
     double x,y,z;
     z=zProv->GetZ();
     std::tie(x,y)=xyProv->GetXY();
-    return beamToDetRotation*ROOT::Math::XYZPoint(x,y,z)+beamPosition;
+    return beamToDetRotation*ROOT::Math::XYZPoint(x,y,z)+beamPosition; // need to verify if this is correct, skipping for GUI valuees
 }
 
 SimEvent EventGenerator::GenerateEvent() {
-    auto pos=GenerateVertexPosition();
-    auto vtxPos=TVector3(pos.X(),pos.Y(),pos.Z());
+    //auto pos=GenerateVertexPosition(); // previous version
+    //auto vtxPos=TVector3(pos.X(),pos.Y(),pos.Z()); // previous version
+    auto vtxPos=TVector3(-49.8369, 0.868339, -37.4044); // vertex position from GUI has to be inputed without rotation to reproduce real events (example values, should be able to get them from the config file, using XY, Z providers as above)
     auto gammaMom=eProv->GetEnergy();
     reaction_type rType;
     PrimaryParticles primaries;
