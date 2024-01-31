@@ -34,14 +34,14 @@ ReactionTwoProng::GeneratePrimaries(double gammaMom, const ROOT::Math::Rotation3
                            (pow(totalEnergy, 2) - pow(prod1Mass + prod2Mass, 2))) / totalEnergy;
     auto thetaCM = thetaProv->GetAngle();
     auto phiCM = phiProv->GetAngle();
-    // edit for reproducing fitted events from GUI - if the changes are accepted, possibly as a new module, the values should also be taken from the config file (example ones put here for now)
-    TVector3 vertex = {-49.8369, 0.868339, -37.4044}; 
-    TVector3 prod1End = {-25.522, -59.766, -54.9762};
-    TVector3 prod2End = {-52.3815, 8.26315, -34.3788};
-    double prod1length = 67.6498;
-    double prod2length = 8.38527;
-    TVector3 prod1tangent = {1, 1.83356, -1.18942};
-    TVector3 prod2tangent = {1, 1.20164, 1.90221};
+    // edit for reproducing fitted events from GUI - if changes are accepted, possibly as a new module, the values should also be taken from the config file (example ones put here for now)
+    TVector3 vertex = {-150.013, 1.41374, -7.32393}; 
+    TVector3 prod1End = {-108.383, 2.34073, -54.2624};
+    TVector3 prod2End = {-155.324, 2.25, -0.956189};
+    double prod1length = 62.7468;
+    double prod2length = 8.33388;
+    TVector3 prod1tangent = {1, 2.41593, 0.0222633};
+    TVector3 prod2tangent = {1, 0.701183, 2.98542};
     IonRangeCalculator ionCalculator;
     double prod1_T_LAB = ionCalculator.getIonEnergyMeV(prod1Pid,prod1length);
     double prod2_T_LAB = ionCalculator.getIonEnergyMeV(prod2Pid,prod2length);

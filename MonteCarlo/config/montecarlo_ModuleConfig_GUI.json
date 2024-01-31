@@ -17,8 +17,8 @@
         "Beam": {
           "BeamGeometry": {
             "EulerAnglesNominal": {
-              "phi": -1.5708,
-              "theta": 1.5708,
+              "phi": 0.0,
+              "theta": 0.0,
               "psi": 0.0
             },
             "EulerAnglesActual": {
@@ -35,7 +35,7 @@
           "GammaEnergy": {
             "distribution": "EProviderSingle",
             "parameters": {
-              "singleE": 11
+              "singleE": 11.5
             }
           }
         },
@@ -43,39 +43,35 @@
           "VertexTransverse": {
             "distribution": "XYProviderSingle",
             "parameters": {
-              "singleX": -49.5939,
-              "singleY": 4.76034
+              "singleX": -150.013,
+              "singleY": 1.41374
             }
           },
           "VertexLongitudinal": {
             "distribution": "ZProviderSingle",
             "parameters": {
-              "singleZ": -37.4044
+              "singleZ": -7.32393
             }
           }
         },
         "Reactions": [
           {
-            "type": "ParticleGun",
+            "type": "TwoProng",
             "branchingRatio": 1,
-            "tag": "PARTICLE_GUN",
-            "Particle": "ALPHA",
+            "tag": "C12_ALPHA",
+            "target": "OXYGEN_16",
+            "FirstProduct": "ALPHA",
+            "SecondProduct": "CARBON_12",
             "Theta": {
               "distribution": "AngleProviderSingle",
               "parameters": {
-                "singleAngle": 1.81983
+                "singleAngle": 0.0
               }
             },
             "Phi": {
               "distribution": "AngleProviderSingle",
               "parameters": {
-                "singleAngle": -1.20993
-              }
-            },
-            "KineticEnergy": {
-              "distribution": "EProviderSingle",
-              "parameters": {
-                "singleE": 3
+                "singleAngle": 0.0
               }
             }
           },
@@ -195,10 +191,10 @@
       }
     },
     "TPCDigitizerRandom": {
-      "sigmaXYmin": 1,
-      "sigmaXYmax": 2,
-      "sigmaZmin": 1,
-      "sigmaZmax": 2,
+      "sigmaXYmin": 1.5,
+      "sigmaXYmax": 1.5,
+      "sigmaZmin": 1.5,
+      "sigmaZmax": 1.5,
       "NSamplesPerHit": 100,
       "MeVToChargeScale": 100000
     },
