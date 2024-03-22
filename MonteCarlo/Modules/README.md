@@ -271,8 +271,10 @@ Configuration template:
 ```json
 {
   "GeometryConfig": {},
-  "sigmaXY": {},
-  "sigmaZ": {},
+  "sigmaXYmin": {},
+  "sigmaXYmax": {},
+  "sigmaZmin": {},
+  "sigmaZmax": {},
   "NSamplesPerHit": {},
   "MeVToChargeScale": {}
 }
@@ -281,8 +283,8 @@ Configuration template:
 where:
 
 * `"GeometryConfig"` - `string`, path to `geometry_ELITPC` configuration
-* `"sigmaXY"` - `float`, sigma for diffusion in plane perpendicular to drift direction
-* `"sigmaZ"` - `float`, sigma for diffusion along drift direction
+* `"sigmaXYmin", "sigmaXYmax"` - `float`, min and max values of an uniform distribution of sigma for diffusion in plane perpendicular to drift direction (treated as single value if the same)
+* `"sigmaZmin", "sigmaZmax"` - `float`, min and max values of an uniform distribution of sigma for diffusion along drift direction (treated as single value if the same)
 * `"NSamplesPerHit"` - `int`, number of random samples per simulated hit
 * `"MeVToChargeScale"` - `float`, number of ADC samples per MeV
 
